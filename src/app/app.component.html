@@ -1,16 +1,4 @@
 <div class="container">
-    <app-user [username]="username" (itemAdded)="addItem()"/>
-    <div class="card">
-        <div class="card-body">
-            <h5 class="card-title">Hello, {{ title }}</h5>
-            <p class="card-text">This is my first Bootstrap card in my Angular app.</p>
-            <div class="card-text">
-                <a [href]="searchUrl">Go to search engine</a>
-            </div>
-            <div class="card-text">
-                <button class="btn btn-primary" (click)="onButtonClick()">Click me!</button>
-            </div>
-            <div class="card-text">Items added: {{ items }}</div>
-        </div>
-    </div>
+    <app-navigation/>
+    <router-outlet/>
 </div>

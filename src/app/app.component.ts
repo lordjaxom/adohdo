@@ -1,23 +1,12 @@
 import {Component} from '@angular/core';
-import {UserComponent} from "./user.component";
+import {NavigationComponent} from "./navigation/navigation.component";
+import {RouterOutlet} from "@angular/router";
 
 @Component({
     selector: 'app-root',
-    imports: [UserComponent],
+    imports: [NavigationComponent, RouterOutlet],
     templateUrl: './app.component.html',
     styleUrl: './app.component.scss'
 })
 export class AppComponent {
-    title = 'Client';
-    searchUrl = 'https://www.google.com/search?q=';
-    username = 'Sascha Volkenandt';
-    items = 0;
-
-    onButtonClick() {
-      this.title = 'Clicked';
-    }
-
-    addItem() {
-        ++this.items;
-    }
 }

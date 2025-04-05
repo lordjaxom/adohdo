@@ -61,3 +61,6 @@ testem.log
 # System files
 .DS_Store
 Thumbs.db
+
+# TODO
+example/
