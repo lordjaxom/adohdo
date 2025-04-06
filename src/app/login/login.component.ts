@@ -1,17 +1,26 @@
 import {Component, Inject, OnInit} from "@angular/core";
-import {FormBuilder, FormGroup, Validators} from "@angular/forms";
+import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from "@angular/forms";
+import {FontAwesomeModule} from "@fortawesome/angular-fontawesome";
+import {faGoogle, faGithub} from "@fortawesome/free-brands-svg-icons";
 
 import {AuthenticationProvider} from "../model/model";
 import {APP_BASE_HREF} from "@angular/common";
 
 @Component({
     selector: 'app-login',
+    imports: [FontAwesomeModule, ReactiveFormsModule],
     templateUrl: './login.component.html',
+    styleUrl: './login.component.scss'
 })
 export class LoginComponent implements OnInit {
-    loginForm!: FormGroup;
+    faGoogle = faGoogle;
+    faGithub = faGithub;
 
-    private readonly baseHref = "http://localhost:8080/browser";
+    loginForm!: FormGroup;
+    loading = false;
+    submitted = false;
+
+    private readonly baseHref = "http://localhost:8080/browser"; // TODO
 
     constructor(
         private formBuilder: FormBuilder,
@@ -26,7 +35,7 @@ export class LoginComponent implements OnInit {
         })
     }
 
-    onSubmit() {
+    loginLocally() {
 
     }
 
