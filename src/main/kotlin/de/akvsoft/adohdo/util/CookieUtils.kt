@@ -40,8 +40,6 @@ object CookieUtils {
     }
 
     inline fun <reified T> deserialize(value: String): T {
-        return SerializationUtils.deserialize(
-            Base64.getUrlDecoder().decode(value)
-        ) as T
+        return SerializationUtils.deserialize(Base64.getUrlDecoder().decode(value)) as T
     }
 }

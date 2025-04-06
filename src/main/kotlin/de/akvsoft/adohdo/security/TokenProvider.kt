@@ -8,6 +8,7 @@ import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Service
 import java.time.Duration
 import java.time.ZonedDateTime
+import java.util.*
 
 @Service
 class TokenProvider(
@@ -22,21 +23,20 @@ class TokenProvider(
     private val algorithm: Algorithm by lazy { Algorithm.HMAC256(tokenSecret) }
 
     fun createToken(authentication: Authentication): String {
-        val userPrincipal = authentication.principal as UserPrincipal
+        val userPrincipal = authentication.principal as CustomUserPrincipal
 
         val issuedAt = ZonedDateTime.now()
         val expiresAt = issuedAt.plus(Duration.ofMillis(tokenExpirationMsec))
 
         return JWT.create()
-            .withSubject(userPrincipal.name)
+            .withSubject(userPrincipal.id.toString())
             .withIssuedAt(issuedAt.toInstant())
             .withExpiresAt(expiresAt.toInstant())
             .sign(algorithm)
     }
 
-    fun getUserIdFromToken(token: String): String {
-        return JWT.require(algorithm).build().verify(token).subject
-    }
+    fun getUserIdFromToken(token: String): UUID =
+        UUID.fromString(JWT.require(algorithm).build().verify(token).subject)
 
     fun validateToken(token: String): Boolean {
         try {

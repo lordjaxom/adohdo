@@ -13,7 +13,7 @@ const val REDIRECT_URI_PARAM_COOKIE_NAME: String = "redirect_uri"
 private const val cookieExpireSeconds = 180
 
 @Component
-class HttpCookieOAuth2AuthorizationRequestRepository : AuthorizationRequestRepository<OAuth2AuthorizationRequest?> {
+class HttpCookieOAuth2AuthorizationRequestRepository : AuthorizationRequestRepository<OAuth2AuthorizationRequest> {
 
     override fun loadAuthorizationRequest(request: HttpServletRequest): OAuth2AuthorizationRequest? {
         return CookieUtils

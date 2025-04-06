@@ -1,6 +1,14 @@
 spring:
   application:
     name: adohdo
+  datasource:
+    url: jdbc:h2:file:./var/adohdo.h2
+  jpa:
+    show-sql: true
+    generate-ddl: true
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
   security:
     oauth2:
       client:
@@ -19,9 +27,6 @@ spring:
             scope:
               - user:email
               - read:user
-  mvc:
-    pathmatch:
-      matching-strategy: ant_path_matcher
 
 adohdo:
   auth:

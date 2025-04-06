@@ -3,11 +3,13 @@ package de.akvsoft.adohdo.security
 import de.akvsoft.adohdo.security.oauth2.*
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import org.springframework.http.HttpStatus
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.http.SessionCreationPolicy
 import org.springframework.security.oauth2.client.endpoint.RestClientAuthorizationCodeTokenResponseClient
 import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository
 import org.springframework.security.web.SecurityFilterChain
+import org.springframework.security.web.authentication.HttpStatusEntryPoint
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
 
 private const val OAUTH2_BASE_URI = "/oauth2/authorize"
@@ -50,6 +52,10 @@ class SecurityConfiguration(
             it.tokenEndpoint { endpoint -> endpoint.accessTokenResponseClient(RestClientAuthorizationCodeTokenResponseClient()) }
             it.successHandler(oAuth2AuthenticationSuccessHandler)
             it.failureHandler(oAuth2AuthenticationFailureHandler)
+        }
+
+        http.exceptionHandling {
+            it.authenticationEntryPoint(HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED))
         }
 
         http.addFilterBefore(tokenAuthenticationFilter, UsernamePasswordAuthenticationFilter::class.java)

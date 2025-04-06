@@ -24,7 +24,7 @@ export const authenticationInterceptor: HttpInterceptorFn = (req: HttpRequest<un
                     authenticationService.logout();
                 }
 
-                const errorMessage = JSON.stringify(error.error, null, '\t');
+                const errorMessage = JSON.stringify(error.error, null, '\t'); // TODO
                 return throwError(() => error);
             })
         )

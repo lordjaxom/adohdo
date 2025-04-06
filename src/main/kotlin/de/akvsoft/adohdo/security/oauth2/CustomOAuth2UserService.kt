@@ -1,7 +1,8 @@
 package de.akvsoft.adohdo.security.oauth2
 
-import de.akvsoft.adohdo.security.UserPrincipal
-import de.akvsoft.adohdo.security.oauth2.user.OAuth2UserInfo
+import de.akvsoft.adohdo.security.CustomUserPrincipal
+import de.akvsoft.adohdo.user.User
+import de.akvsoft.adohdo.user.UserRepository
 import org.slf4j.LoggerFactory
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest
@@ -9,7 +10,9 @@ import org.springframework.security.oauth2.core.user.OAuth2User
 import org.springframework.stereotype.Service
 
 @Service
-class CustomOAuth2UserService : DefaultOAuth2UserService() {
+class CustomOAuth2UserService(
+    private val userRepository: UserRepository
+) : DefaultOAuth2UserService() {
 
     companion object {
         val logger = LoggerFactory.getLogger(CustomOAuth2UserService::class.java)!!
@@ -28,14 +31,13 @@ class CustomOAuth2UserService : DefaultOAuth2UserService() {
 
         if (userInfo.email.isEmpty()) {
             logger.error("Email not found from OAuth2 provider")
-            throw IllegalStateException("Email not found from OAuth2 provider")
+            throw IllegalStateException("Email not found from OAuth2 provider") // TODO
         }
 
-        return UserPrincipal(
-            userInfo.id,
-            userInfo.email,
-            "",
-            oAuth2User.attributes,
-        )
+        // TODO UserService
+        val user = userRepository.findByEmail(userInfo.email)
+            ?: User(userInfo.email, "", userInfo.name).let { userRepository.save(it) }
+
+        return CustomUserPrincipal(user)
     }
 }

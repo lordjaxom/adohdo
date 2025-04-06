@@ -31,7 +31,8 @@ class CustomAuthorizationRequestResolver(
         val attributes = req.attributes.toMutableMap()
         val additionalParameters = req.additionalParameters.toMutableMap()
         addPkceParameters(attributes, additionalParameters)
-        return OAuth2AuthorizationRequest.from(req)
+        return OAuth2AuthorizationRequest
+            .from(req)
             .attributes(attributes)
             .additionalParameters(additionalParameters)
             .build()

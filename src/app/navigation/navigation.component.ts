@@ -28,4 +28,8 @@ export class NavigationComponent implements OnInit {
     get authenticated() {
         return this.authenticationService.authenticated
     }
+
+    get currentUser() {
+        return this.authenticationService.currentUser;
+    }
 }

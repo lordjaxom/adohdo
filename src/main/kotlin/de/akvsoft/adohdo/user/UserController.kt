@@ -1,6 +1,7 @@
 package de.akvsoft.adohdo.user
 
-import org.springframework.http.MediaType
+import de.akvsoft.adohdo.security.CustomUserPrincipal
+import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
@@ -9,8 +10,8 @@ import org.springframework.web.bind.annotation.RestController
 @RequestMapping("/api/user")
 class UserController {
 
-    @GetMapping(produces = [MediaType.APPLICATION_JSON_VALUE])
-    fun getUser(): User {
-        return User("Sascha Volkenandt")
+    @GetMapping
+    fun getCurrentUser(@AuthenticationPrincipal principal: CustomUserPrincipal): UserResponse {
+        return UserResponse(principal.name)
     }
 }

@@ -2,6 +2,8 @@ import {Injectable} from "@angular/core";
 import {Router} from "@angular/router";
 import {jwtDecode} from "jwt-decode";
 
+import {User, UserService} from "../user/user.service";
+
 const ACCESS_TOKEN = "accessToken";
 
 @Injectable({
@@ -10,10 +12,11 @@ const ACCESS_TOKEN = "accessToken";
 export class AuthenticationService {
     parsedToken: any;
     authenticated: boolean = false;
-    currentUser: any;
+    currentUser?: User | null;
 
     constructor(
-        private router: Router
+        private router: Router,
+        private userService: UserService
     )  {
         const token = this.getToken();
         if (token !== null && this.parsedToken == null) {
@@ -28,6 +31,8 @@ export class AuthenticationService {
     setAuthentication(accessToken: string) {
         localStorage.setItem(ACCESS_TOKEN, accessToken);
         this.authenticated = true;
+
+        this.userService.getUser().subscribe(user => this.currentUser = user);
     }
 
     logout() {

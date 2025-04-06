@@ -16,7 +16,10 @@
             </ul>
         </div>
         <div class="d-flex">
-            <span class="navbar-text" *ngIf="authenticated">Angemeldet</span>
+            <span class="navbar-text">
+                <ng-container *ngIf="!authenticated">Not logged in</ng-container>
+                <ng-container *ngIf="authenticated">{{ currentUser?.name }}</ng-container>
+            </span>
         </div>
     </div>
 </nav>

@@ -49,6 +49,7 @@ class OAuth2AuthenticationSuccessHandler(
     }
 
     private fun isAuthorizedRedirectUri(uri: String): Boolean {
+
         // TODO
         return true
 //        val clientRedirectUri = URI.create(uri)
