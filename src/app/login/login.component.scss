@@ -15,3 +15,21 @@
   background-color: #24292e !important;
   border-color: #24292e !important;
 }
+
+.divider {
+  color: black;
+  opacity: 50%;
+  text-align: center;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.divider span:first-child, .divider span:last-child {
+  border-top: 1px solid black;
+  flex-grow: 1;
+}
+
+.divider span:nth-child(2) {
+  padding: 0 15px;
+}

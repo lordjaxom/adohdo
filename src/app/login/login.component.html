@@ -1,10 +1,15 @@
 <div class="container">
     <div class="row">
+        <div class="col-sm-9 col-md-7 col-lg-5 mx-auto pt-5">
+            <h1 class="p-4 text-center fw-bolder">a:do:h:do</h1>
+        </div>
+    </div>
+    <div class="row">
         <div class="col-sm-9 col-md-7 col-lg-5 mx-auto">
-            <div class="card border-0 shadow rounded-3 my-5">
+            <div class="card border-0 shadow rounded-3">
                 <div class="card-body p-4 p-sm-5">
                     <form [formGroup]="loginForm">
-                        <div class="alert alert-danger" role="alert">
+                        <div class="alert alert-danger" role="alert" hidden="hidden">
                             Invalid credentials.
                         </div>
 
@@ -21,16 +26,39 @@
                             <button class="btn btn-primary btn-login text-uppercase fw-bold" type="submit"
                                     [disabled]="loginForm.invalid || loading" (click)="loginLocally()">Sign in</button>
                         </div>
-                        <hr class="my-4">
                     </form>
-
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-9 col-md-7 col-lg-5 mx-auto mt-1">
+            <div class="w-50 float-start">Forgot password?</div>
+            <div class="w-50 float-start text-end">Register</div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-9 col-md-7 col-lg-5 mx-auto py-5">
+            <div class="divider">
+                <span></span>
+                <span>or</span>
+                <span></span>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-9 col-md-7 col-lg-5 mx-auto">
+            <div class="card border-0 shadow rounded-3">
+                <div class="card-body p-4 p-sm-5">
                     <div class="d-grid mb-2">
-                        <button class="btn btn-login btn-google text-uppercase fw-bold" (click)="loginWithProvider(AuthenticationProvider.google)">
+                        <button class="btn btn-login btn-google text-uppercase fw-bold"
+                                (click)="loginWithProvider(AuthenticationProvider.google)">
                             <fa-icon [icon]="faGoogle"/> Sign in with Google
                         </button>
                     </div>
                     <div class="d-grid">
-                        <button class="btn btn-login btn-github text-uppercase fw-bold" (click)="loginWithProvider(AuthenticationProvider.github)">
+                        <button class="btn btn-login btn-github text-uppercase fw-bold"
+                                (click)="loginWithProvider(AuthenticationProvider.github)">
                             <fa-icon [icon]="faGithub"/> Sign in with Github
                         </button>
                     </div>

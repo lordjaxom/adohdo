@@ -37,7 +37,6 @@ class CustomOAuth2UserService(
         // TODO UserService
         val user = userRepository.findByEmail(userInfo.email)
             ?: User(userInfo.email, "", userInfo.name).let { userRepository.save(it) }
-
         return CustomUserPrincipal(user)
     }
 }

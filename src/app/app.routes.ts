@@ -4,12 +4,12 @@ import {DashboardComponent} from "./dashboard/dashboard.component";
 import {TasksComponent} from "./tasks/tasks.component";
 import {LoginComponent} from "./login/login.component";
 import {AuthenticationGuard} from "./security/authentication.guard";
-import {OAuth2RedirectHandlerComponent} from "./security/oauth2-redirect-handler.component";
+import {OAuth2RedirectComponent} from "./security/oauth2-redirect.component";
 
 export const routes: Routes = [
     {path: '', redirectTo: '/login', pathMatch: 'full'},
     {path: 'login', component: LoginComponent},
-    {path: 'oauth2/:provider/redirect', component: OAuth2RedirectHandlerComponent},
+    {path: 'oauth2', component: OAuth2RedirectComponent},
     {path: 'dashboard', component: DashboardComponent, canActivate: [AuthenticationGuard]},
     {path: 'tasks', component: TasksComponent, canActivate: [AuthenticationGuard]},
 ];

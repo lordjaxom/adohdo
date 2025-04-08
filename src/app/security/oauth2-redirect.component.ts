@@ -1,5 +1,6 @@
 import {Component, OnInit} from "@angular/core";
 import {ActivatedRoute, Router} from "@angular/router";
+
 import {AuthenticationService} from "./authentication.service";
 import {AuthenticationProvider} from "../model/model";
 
@@ -7,11 +8,11 @@ import {AuthenticationProvider} from "../model/model";
     selector: 'app-oauth2-redirect-handler',
     template: ''
 })
-export class OAuth2RedirectHandlerComponent implements OnInit {
+export class OAuth2RedirectComponent implements OnInit {
 
+    provider!: AuthenticationProvider;
     token!: string;
     error!: string;
-    authProvider: AuthenticationProvider = AuthenticationProvider.provider;
 
     constructor(
         private route: ActivatedRoute,
@@ -22,7 +23,7 @@ export class OAuth2RedirectHandlerComponent implements OnInit {
 
     ngOnInit() {
         this.route.paramMap.subscribe(params => {
-            this.authProvider = params.get('provider') as AuthenticationProvider;
+            this.provider = params.get('provider') as AuthenticationProvider;
         })
 
         this.route.queryParams.subscribe(params => {

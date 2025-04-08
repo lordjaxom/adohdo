@@ -1,4 +1,2 @@
-<div class="container">
-    <app-navigation/>
-    <router-outlet/>
-</div>
+<app-navigation *ngIf="authenticated"/>
+<router-outlet/>
