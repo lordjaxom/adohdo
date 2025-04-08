@@ -12,14 +12,15 @@ import {AuthenticationProvider} from "../model/model";
     styleUrl: './login.component.scss'
 })
 export class LoginComponent implements OnInit {
-    faGoogle = faGoogle;
-    faGithub = faGithub;
+    readonly faGoogle = faGoogle;
+    readonly faGithub = faGithub;
+
+    readonly prGoogle = AuthenticationProvider.google
+    readonly prGithub = AuthenticationProvider.github
 
     loginForm!: FormGroup;
     loading = false;
     submitted = false;
-
-    readonly AuthenticationProvider = AuthenticationProvider
 
     constructor(
         private formBuilder: FormBuilder,
