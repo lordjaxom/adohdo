@@ -2,6 +2,7 @@ import {Component, Inject, OnInit} from "@angular/core";
 import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from "@angular/forms";
 import {FontAwesomeModule} from "@fortawesome/angular-fontawesome";
 import {faGoogle, faGithub} from "@fortawesome/free-brands-svg-icons";
+import {ToastrService} from "ngx-toastr";
 
 import {AuthenticationProvider} from "../model/model";
 
@@ -19,11 +20,15 @@ export class LoginComponent implements OnInit {
     readonly prGithub = AuthenticationProvider.github
 
     loginForm!: FormGroup;
+
     loading = false;
     submitted = false;
+    error = false;
+    message = '';
 
     constructor(
         private formBuilder: FormBuilder,
+        private toastrService: ToastrService
     ) {
     }
 
@@ -35,7 +40,9 @@ export class LoginComponent implements OnInit {
     }
 
     loginLocally() {
-
+        this.error = false;
+        this.submitted = false;
+        this.toastrService.info("No Login yet", "Alarma")
     }
 
     loginWithProvider(provider: AuthenticationProvider) {
