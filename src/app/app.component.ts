@@ -16,9 +16,10 @@ export class AppComponent {
     constructor(
         private authenticationService: AuthenticationService
     ) {
+        console.info("Constructing AppComponent");
     }
 
     get authenticated() {
-        return this.authenticationService.authenticated
+        return this.authenticationService.authenticated;
     }
 }

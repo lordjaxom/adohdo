@@ -1,8 +1,5 @@
 import {Injectable} from "@angular/core";
 import {Router} from "@angular/router";
-import {jwtDecode} from "jwt-decode";
-
-import {User, UserService} from "../user/user.service";
 
 const ACCESS_TOKEN = "accessToken";
 
@@ -10,36 +7,38 @@ const ACCESS_TOKEN = "accessToken";
     providedIn: 'root'
 })
 export class AuthenticationService {
-    parsedToken: any;
-    authenticated: boolean = false;
-    currentUser?: User | null;
+    private authenticated_ = false;
 
     constructor(
-        private router: Router,
-        private userService: UserService
-    )  {
-        const token = this.getToken();
-        if (token !== null && this.parsedToken == null) {
-            this.parsedToken = jwtDecode(token);
+        private router: Router
+    ) {
+        console.info("Constructing AuthenticationService");
+        const token = this.token;
+        if (token !== null) {
+            console.info("Found stored token")
+            this.authenticate(token);
         }
     }
 
-    getToken() {
+    get authenticated() {
+        return this.authenticated_
+    }
+
+    get token() {
         return localStorage.getItem(ACCESS_TOKEN);
     }
 
-    setAuthentication(accessToken: string) {
+    authenticate(accessToken: string) {
         localStorage.setItem(ACCESS_TOKEN, accessToken);
-        this.authenticated = true;
-
-        this.userService.getUser().subscribe(user => this.currentUser = user);
+        this.authenticated_ = true;
+        console.info("authentication set successfully")
     }
 
     logout() {
+        console.info("Logging out");
         localStorage.removeItem(ACCESS_TOKEN);
 
-        this.authenticated = false;
-        this.currentUser = null;
+        this.authenticated_ = false;
         this.router.navigate(['/login']);
     }
 }

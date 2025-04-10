@@ -1,17 +1,17 @@
 import {Component, OnInit} from "@angular/core";
-import {NgIf} from "@angular/common";
+import {RouterLink, RouterLinkActive} from "@angular/router";
 
 import {User, UserService} from "../user/user.service";
-import {RouterLink, RouterLinkActive} from "@angular/router";
 import {AuthenticationService} from "../security/authentication.service";
 
 @Component({
     selector: "app-navigation",
-    imports: [NgIf, RouterLink, RouterLinkActive],
+    imports: [RouterLink, RouterLinkActive],
     templateUrl: "./navigation.component.html"
 })
 export class NavigationComponent implements OnInit {
-    user: User | undefined;
+
+    user_!: User;
 
     constructor(
         private userService: UserService,
@@ -19,17 +19,15 @@ export class NavigationComponent implements OnInit {
     ) {
     }
 
-    ngOnInit(): void {
-        // this.userService.getUser().subscribe(user => {
-        //     this.user = user;
-        // })
+    ngOnInit() {
+        this.userService.user.subscribe(user => this.user_ = user);
     }
 
-    get authenticated() {
-        return this.authenticationService.authenticated
+    get user() {
+        return this.user_;
     }
 
-    get currentUser() {
-        return this.authenticationService.currentUser;
+    logout() {
+        this.authenticationService.logout();
     }
 }

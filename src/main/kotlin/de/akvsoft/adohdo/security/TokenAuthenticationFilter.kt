@@ -39,6 +39,6 @@ class TokenAuthenticationFilter(
 
     private fun extractBearerToken(request: HttpServletRequest): String? {
         return request.getHeader(HttpHeaders.AUTHORIZATION)
-            ?.apply { if (isNotEmpty() && startsWith("Bearer ")) substring(7) else null }
+            ?.run { if (isNotEmpty() && startsWith("Bearer ")) substring(7) else null }
     }
 }

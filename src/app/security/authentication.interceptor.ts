@@ -1,31 +1,29 @@
 import {HttpErrorResponse, HttpHandlerFn, HttpInterceptorFn, HttpRequest} from "@angular/common/http";
 import {inject} from "@angular/core";
-import {catchError, throwError} from "rxjs";
+import {catchError, of, throwError} from "rxjs";
 
 import {AuthenticationService} from "./authentication.service";
 
 export const authenticationInterceptor: HttpInterceptorFn = (req: HttpRequest<unknown>, next: HttpHandlerFn) => {
     const authenticationService = inject(AuthenticationService);
 
-    const authToken = authenticationService.getToken();
-
-    if (authToken) {
+    if (authenticationService.authenticated) {
         req = req.clone({
-            setHeaders: {
-                ["Authorization"]: `Bearer ${authToken}`,
-            },
+            headers: req.headers.set('Authorization', `Bearer ${authenticationService.token}`),
         });
     }
 
     return next(req)
         .pipe(
             catchError((error: HttpErrorResponse) => {
-                if (error.status === 403) {
+                console.info(`Interceptor failed with code ${error.status}`)
+                if (error.status === 401) {
                     authenticationService.logout();
+                    return of();
+                } else {
+                    const errorMessage = JSON.stringify(error.error, null, '\t'); // TODO
+                    return throwError(() => error);
                 }
-
-                const errorMessage = JSON.stringify(error.error, null, '\t'); // TODO
-                return throwError(() => error);
             })
         )
 }

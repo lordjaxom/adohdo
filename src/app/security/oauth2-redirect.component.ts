@@ -31,7 +31,7 @@ export class OAuth2RedirectComponent implements OnInit {
             this.error = params['error'];
 
             if (this.token) {
-                this.authenticationService.setAuthentication(this.token);
+                this.authenticationService.authenticate(this.token);
                 this.router.navigate(
                     ['/dashboard'],
                     {state: {from: this.router.routerState.snapshot.url}}

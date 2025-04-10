@@ -7,7 +7,7 @@ import {AuthenticationGuard} from "./security/authentication.guard";
 import {OAuth2RedirectComponent} from "./security/oauth2-redirect.component";
 
 export const routes: Routes = [
-    {path: '', redirectTo: '/login', pathMatch: 'full'},
+    {path: '', redirectTo: '/dashboard', pathMatch: 'full'},
     {path: 'login', component: LoginComponent},
     {path: 'oauth2', component: OAuth2RedirectComponent},
     {path: 'dashboard', component: DashboardComponent, canActivate: [AuthenticationGuard]},
