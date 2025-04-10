@@ -5,6 +5,7 @@ import com.auth0.jwt.algorithms.Algorithm
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.security.core.Authentication
+import org.springframework.security.oauth2.jwt.JwtEncoder
 import org.springframework.stereotype.Service
 import java.time.Duration
 import java.time.ZonedDateTime
@@ -42,7 +43,7 @@ class TokenProvider(
         try {
             JWT.require(algorithm).build().verify(token)
             return true
-        } catch (e: Exception) {
+        } catch (_: Exception) {
             logger.error("Invalid or expired JWT.")
         }
         return false

@@ -1,6 +1,5 @@
 package de.akvsoft.adohdo.security.oauth2
 
-import de.akvsoft.adohdo.util.CookieUtils
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
 import org.springframework.security.core.AuthenticationException
@@ -11,17 +10,17 @@ import org.springframework.web.util.UriComponentsBuilder
 
 @Component
 class OAuth2AuthenticationFailureHandler(
-    private val httpCookieOAuth2AuthorizationRequestRepository: HttpCookieOAuth2AuthorizationRequestRepository
+    private val oauth2AuthorizationRequestRepository: HttpCookieOAuth2AuthorizationRequestRepository
 ) : SimpleUrlAuthenticationFailureHandler() {
 
     override fun onAuthenticationFailure(request: HttpServletRequest, response: HttpServletResponse, exception: AuthenticationException) {
-        val redirectUrl = CookieUtils.findCookie(request, REDIRECT_URI_PARAM_COOKIE_NAME)?.value ?: "/"
+        val redirectUrl = oauth2AuthorizationRequestRepository.findAuthorizationRequestRedirectUri(request) ?: "/"
         val targetUrl = UriComponentsBuilder
             .fromUriString(redirectUrl)
             .queryParam("error", exception.localizedMessage)
             .build().toUriString()
 
-        httpCookieOAuth2AuthorizationRequestRepository.removeAuthorizationRequestCookies(request, response)
+        oauth2AuthorizationRequestRepository.removeAuthorizationRequestCookies(request, response)
 
         redirectStrategy.sendRedirect(request, response, targetUrl)
     }

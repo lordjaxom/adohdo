@@ -18,7 +18,7 @@ class TokenAuthenticationFilter(
 
     override fun doFilterInternal(request: HttpServletRequest, response: HttpServletResponse, filterChain: FilterChain) {
         try {
-            val jwt = getJWTFromRequest(request)
+            val jwt = extractBearerToken(request)
             if (!jwt.isNullOrEmpty() && tokenProvider.validateToken(jwt)) {
                 val userId = tokenProvider.getUserIdFromToken(jwt)
                 val userDetails = userDetailsService.loadUserById(userId)
@@ -37,9 +37,8 @@ class TokenAuthenticationFilter(
         filterChain.doFilter(request, response)
     }
 
-    private fun getJWTFromRequest(request: HttpServletRequest): String? {
-        return request
-            .getHeader(HttpHeaders.AUTHORIZATION)
-            ?.run { if (isNotEmpty() && startsWith("Bearer ")) substring(7) else null }
+    private fun extractBearerToken(request: HttpServletRequest): String? {
+        return request.getHeader(HttpHeaders.AUTHORIZATION)
+            ?.apply { if (isNotEmpty() && startsWith("Bearer ")) substring(7) else null }
     }
 }

@@ -6,13 +6,13 @@ import org.springframework.stereotype.Component
 import java.util.Base64
 
 @Component
-class OAuth2AuthorizationRequestSerializer {
-
-    private val objectMapper = ObjectMapper()
+class OAuth2AuthorizationRequestSerializer(
+    private val objectMapper: ObjectMapper
+) {
 
     fun serialize(value: OAuth2AuthorizationRequest): String =
-        Base64.getUrlEncoder().encodeToString(objectMapper.writeValueAsString(value))
+        Base64.getUrlEncoder().encodeToString(objectMapper.writeValueAsString(value).toByteArray())
 
     fun deserialize(value: String): OAuth2AuthorizationRequest =
-        objectMapper.readValue(value, OAuth2AuthorizationRequest::class.java)
+        objectMapper.readValue(Base64.getUrlDecoder().decode(value), OAuth2AuthorizationRequest::class.java)
 }

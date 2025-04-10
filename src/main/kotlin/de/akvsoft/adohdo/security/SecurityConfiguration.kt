@@ -22,7 +22,6 @@ class SecurityConfiguration(
     private val oAuth2AuthenticationFailureHandler: OAuth2AuthenticationFailureHandler,
     private val oauth2AuthorizationRequestRepository: HttpCookieOAuth2AuthorizationRequestRepository,
     private val tokenAuthenticationFilter: TokenAuthenticationFilter,
-    private val clientRegistrationRepository: ClientRegistrationRepository,
 ) {
 
     @Bean
@@ -45,7 +44,6 @@ class SecurityConfiguration(
             it.authorizationEndpoint { endpoint ->
                 endpoint.baseUri(OAUTH2_BASE_URI)
                 endpoint.authorizationRequestRepository(oauth2AuthorizationRequestRepository)
-                endpoint.authorizationRequestResolver(CustomAuthorizationRequestResolver(clientRegistrationRepository, OAUTH2_BASE_URI))
             }
             it.redirectionEndpoint { endpoint -> endpoint.baseUri(OAUTH2_REDIRECTION_ENDPOINT) }
             it.userInfoEndpoint { endpoint -> endpoint.userService(customOAuth2UserService) }

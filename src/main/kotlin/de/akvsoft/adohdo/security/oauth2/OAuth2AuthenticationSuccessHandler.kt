@@ -1,7 +1,6 @@
 package de.akvsoft.adohdo.security.oauth2
 
 import de.akvsoft.adohdo.security.TokenProvider
-import de.akvsoft.adohdo.util.CookieUtils
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
 import org.apache.coyote.BadRequestException
@@ -13,7 +12,7 @@ import org.springframework.web.util.UriComponentsBuilder
 @Component
 class OAuth2AuthenticationSuccessHandler(
     private val tokenProvider: TokenProvider,
-    private val httpCookieOAuth2AuthorizationRequestRepository: HttpCookieOAuth2AuthorizationRequestRepository
+    private val oauth2AuthorizationRequestRepository: HttpCookieOAuth2AuthorizationRequestRepository
 ) : SimpleUrlAuthenticationSuccessHandler() {
 
     override fun onAuthenticationSuccess(request: HttpServletRequest, response: HttpServletResponse, authentication: Authentication) {
@@ -29,7 +28,7 @@ class OAuth2AuthenticationSuccessHandler(
     }
 
     override fun determineTargetUrl(request: HttpServletRequest, response: HttpServletResponse, authentication: Authentication): String {
-        val redirectUri = CookieUtils.findCookie(request, REDIRECT_URI_PARAM_COOKIE_NAME)?.value
+        val redirectUri = oauth2AuthorizationRequestRepository.findAuthorizationRequestRedirectUri(request)
         if (redirectUri != null && !isAuthorizedRedirectUri(redirectUri)) {
             throw BadRequestException("Sorry! We've got an Unauthorized Redirect URI and can't proceed with the authentication")
         }
@@ -43,9 +42,9 @@ class OAuth2AuthenticationSuccessHandler(
             .toUriString()
     }
 
-    protected fun clearAuthenticationAttributes(request: HttpServletRequest, response: HttpServletResponse) {
+    private fun clearAuthenticationAttributes(request: HttpServletRequest, response: HttpServletResponse) {
         super.clearAuthenticationAttributes(request)
-        httpCookieOAuth2AuthorizationRequestRepository.removeAuthorizationRequestCookies(request, response)
+        oauth2AuthorizationRequestRepository.removeAuthorizationRequestCookies(request, response)
     }
 
     private fun isAuthorizedRedirectUri(uri: String): Boolean {
