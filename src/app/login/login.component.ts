@@ -5,6 +5,7 @@ import {faGoogle, faGithub} from "@fortawesome/free-brands-svg-icons";
 import {ToastrService} from "ngx-toastr";
 
 import {AuthenticationProvider} from "../model/model";
+import {LoginService} from "./login.service";
 
 @Component({
     selector: 'app-login',
@@ -27,6 +28,7 @@ export class LoginComponent implements OnInit {
     message = '';
 
     constructor(
+        private loginService: LoginService,
         private formBuilder: FormBuilder,
         private toastrService: ToastrService
     ) {
@@ -42,7 +44,9 @@ export class LoginComponent implements OnInit {
     loginLocally() {
         this.error = false;
         this.submitted = false;
-        this.toastrService.info("No Login yet", "Alarma")
+        this.loading = true;
+
+        this.loginService.login(this.loginForm.value)
     }
 
     loginWithProvider(provider: AuthenticationProvider) {

@@ -37,6 +37,7 @@ export class AuthenticationService {
 
     logout() {
         localStorage.removeItem(ACCESS_TOKEN);
+
         this.authenticated = false;
         this.currentUser = null;
         this.router.navigate(['/login']);

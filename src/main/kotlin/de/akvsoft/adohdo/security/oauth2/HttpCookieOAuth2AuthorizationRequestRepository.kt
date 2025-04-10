@@ -7,18 +7,19 @@ import org.springframework.security.oauth2.client.web.AuthorizationRequestReposi
 import org.springframework.security.oauth2.core.endpoint.OAuth2AuthorizationRequest
 import org.springframework.stereotype.Component
 
-const val OAUTH2_AUTHORIZATION_REQUEST_COOKIE_NAME: String = "oauth2_auth_request"
+private const val OAUTH2_AUTHORIZATION_REQUEST_COOKIE_NAME: String = "oauth2_auth_request"
 const val REDIRECT_URI_PARAM_COOKIE_NAME: String = "redirect_uri"
 
-private const val cookieExpireSeconds = 180
+private const val COOKIE_EXPIRE_SECONDS = 180
 
 @Component
-class HttpCookieOAuth2AuthorizationRequestRepository : AuthorizationRequestRepository<OAuth2AuthorizationRequest> {
+class HttpCookieOAuth2AuthorizationRequestRepository(
+    private val serializer: OAuth2AuthorizationRequestSerializer
+) : AuthorizationRequestRepository<OAuth2AuthorizationRequest> {
 
     override fun loadAuthorizationRequest(request: HttpServletRequest): OAuth2AuthorizationRequest? {
-        return CookieUtils
-            .findCookie(request, OAUTH2_AUTHORIZATION_REQUEST_COOKIE_NAME)
-            ?.let { CookieUtils.deserialize<OAuth2AuthorizationRequest>(it.value) }
+        return findCookieValue(request, OAUTH2_AUTHORIZATION_REQUEST_COOKIE_NAME)
+            ?.let { serializer.deserialize(it) }
     }
 
     override fun saveAuthorizationRequest(
@@ -35,13 +36,13 @@ class HttpCookieOAuth2AuthorizationRequestRepository : AuthorizationRequestRepos
         CookieUtils.saveCookie(
             response,
             OAUTH2_AUTHORIZATION_REQUEST_COOKIE_NAME,
-            CookieUtils.serialize(authorizationRequest),
-            cookieExpireSeconds
+            serializer.serialize(authorizationRequest),
+            COOKIE_EXPIRE_SECONDS
         )
 
         val redirectUriAfterLogin = request.getParameter(REDIRECT_URI_PARAM_COOKIE_NAME)
         if (!redirectUriAfterLogin.isNullOrBlank()) {
-            CookieUtils.saveCookie(response, REDIRECT_URI_PARAM_COOKIE_NAME, redirectUriAfterLogin, cookieExpireSeconds)
+            CookieUtils.saveCookie(response, REDIRECT_URI_PARAM_COOKIE_NAME, redirectUriAfterLogin, COOKIE_EXPIRE_SECONDS)
         }
     }
 
@@ -53,4 +54,7 @@ class HttpCookieOAuth2AuthorizationRequestRepository : AuthorizationRequestRepos
         CookieUtils.deleteCookie(request, response, OAUTH2_AUTHORIZATION_REQUEST_COOKIE_NAME)
         CookieUtils.deleteCookie(request, response, REDIRECT_URI_PARAM_COOKIE_NAME)
     }
+
+    private fun findCookieValue(request: HttpServletRequest, name: String): String? =
+        request.cookies?.find { it.name == name }?.value
 }

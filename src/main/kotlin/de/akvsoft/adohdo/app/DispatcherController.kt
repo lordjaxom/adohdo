@@ -10,7 +10,7 @@ private const val APP_INDEX_PATH = "$APP_ROOT_PATH/index.html"
 @Controller
 class DispatcherController {
 
-    @GetMapping(path = ["/", APP_ROOT_PATH])
+    @GetMapping(path = ["/", APP_ROOT_PATH, "$APP_ROOT_PATH/"])
     fun redirectToApp() = "redirect:$APP_INDEX_PATH"
 
     @GetMapping("$APP_ROOT_PATH/**/{path:[^.]+}")
