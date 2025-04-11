@@ -16,6 +16,6 @@ class User(
     var name: String,
 
     @Id
-    @GeneratedValue(strategy =GenerationType.UUID)
+    @GeneratedValue(strategy = GenerationType.UUID)
     val id: UUID? = null,
 )

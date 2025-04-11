@@ -1,15 +1,17 @@
-import {Component, Inject, OnInit} from "@angular/core";
+import {Component, OnInit} from "@angular/core";
 import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from "@angular/forms";
+import {Router} from "@angular/router";
 import {FontAwesomeModule} from "@fortawesome/angular-fontawesome";
-import {faGoogle, faGithub} from "@fortawesome/free-brands-svg-icons";
-import {ToastrService} from "ngx-toastr";
+import {faGithub, faGoogle} from "@fortawesome/free-brands-svg-icons";
 
 import {AuthenticationProvider} from "../model/model";
 import {LoginService} from "./login.service";
+import {AuthenticationService} from "../security/authentication.service";
+import {NgIf} from "@angular/common";
 
 @Component({
     selector: 'app-login',
-    imports: [FontAwesomeModule, ReactiveFormsModule],
+    imports: [FontAwesomeModule, ReactiveFormsModule, NgIf],
     templateUrl: './login.component.html',
     styleUrl: './login.component.scss'
 })
@@ -25,12 +27,12 @@ export class LoginComponent implements OnInit {
     loading = false;
     submitted = false;
     error = false;
-    message = '';
 
     constructor(
         private loginService: LoginService,
+        private authenticationService: AuthenticationService,
+        private router: Router,
         private formBuilder: FormBuilder,
-        private toastrService: ToastrService
     ) {
     }
 
@@ -46,7 +48,20 @@ export class LoginComponent implements OnInit {
         this.submitted = false;
         this.loading = true;
 
-        this.loginService.login(this.loginForm.value)
+        console.info("Logging in locally")
+        this.loginService
+            .login(this.loginForm.value)
+            .subscribe({
+                next: data => {
+                    this.authenticationService.authenticate(data.token)
+                    this.router.navigate(['/dashboard'], {state: {from: this.router.routerState.snapshot.url}})
+                },
+                error: error => {
+                    console.info(`Login failed with status ${error.status}`);
+                    this.error = true;
+                    this.loading = false;
+                }
+            })
     }
 
     loginWithProvider(provider: AuthenticationProvider) {

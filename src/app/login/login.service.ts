@@ -1,5 +1,14 @@
 import {Injectable} from "@angular/core";
-import {HttpClient} from "@angular/common/http";
+import {HttpBackend, HttpClient} from "@angular/common/http";
+
+export interface LoginRequest {
+    email: string;
+    password: string;
+}
+
+export interface LoginResponse {
+    token: string;
+}
 
 @Injectable({
     providedIn: 'root'
@@ -7,13 +16,15 @@ import {HttpClient} from "@angular/common/http";
 export class LoginService {
 
     private baseUrl = "/api/login"
+    private http: HttpClient; // non-intercepting
 
     constructor(
-        private http: HttpClient
+        private httpBackend: HttpBackend
     ) {
+        this.http = new HttpClient(httpBackend);
     }
 
-    login(value: any) {
-        this.http.post<String>(this.baseUrl, value).subscribe(next => console.info(next))
+    login(value: LoginRequest) {
+        return this.http.post<LoginResponse>(this.baseUrl, value);
     }
 }

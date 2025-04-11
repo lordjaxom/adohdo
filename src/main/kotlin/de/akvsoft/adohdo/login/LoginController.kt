@@ -8,11 +8,12 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @RequestMapping("/api/login")
-class LoginController {
+class LoginController(
+    private val loginService: LoginService
+) {
 
     @PostMapping(consumes = [MediaType.APPLICATION_JSON_VALUE], produces = [MediaType.APPLICATION_JSON_VALUE])
     fun login(@RequestBody request: LoginRequest): LoginResponse {
-        println(request)
-        return LoginResponse("ja")
+        return loginService.login(request)
     }
 }

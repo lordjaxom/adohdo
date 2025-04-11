@@ -2,7 +2,7 @@ package de.akvsoft.adohdo.security
 
 import com.auth0.jwt.JWT
 import com.auth0.jwt.algorithms.Algorithm
-import org.slf4j.LoggerFactory
+import io.github.oshai.kotlinlogging.KotlinLogging
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Service
@@ -10,15 +10,13 @@ import java.time.Duration
 import java.time.ZonedDateTime
 import java.util.UUID
 
+private val logger = KotlinLogging.logger { }
+
 @Service
 class TokenProvider(
     @Value("\${adohdo.auth.token-secret}") private val tokenSecret: String,
     @Value("\${adohdo.auth.token-expiration-msec}") private val tokenExpirationMsec: Long,
 ) {
-
-    companion object {
-        val logger = LoggerFactory.getLogger(TokenProvider::class.java)!!
-    }
 
     private val algorithm: Algorithm by lazy { Algorithm.HMAC256(tokenSecret) }
 
@@ -43,7 +41,7 @@ class TokenProvider(
             JWT.require(algorithm).build().verify(token)
             return true
         } catch (_: Exception) {
-            logger.error("Invalid or expired JWT.")
+            logger.error { "Invalid or expired JWT." } // TODO
         }
         return false
     }

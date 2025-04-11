@@ -1,13 +1,18 @@
 package de.akvsoft.adohdo.security
 
-import de.akvsoft.adohdo.security.oauth2.*
+import de.akvsoft.adohdo.security.oauth2.CustomOAuth2UserService
+import de.akvsoft.adohdo.security.oauth2.HttpCookieOAuth2AuthorizationRequestRepository
+import de.akvsoft.adohdo.security.oauth2.OAuth2AuthenticationFailureHandler
+import de.akvsoft.adohdo.security.oauth2.OAuth2AuthenticationSuccessHandler
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.http.HttpStatus
+import org.springframework.security.authentication.AuthenticationManager
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.http.SessionCreationPolicy
-import org.springframework.security.oauth2.client.endpoint.RestClientAuthorizationCodeTokenResponseClient
-import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository
+import org.springframework.security.crypto.factory.PasswordEncoderFactories
+import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.security.web.SecurityFilterChain
 import org.springframework.security.web.authentication.HttpStatusEntryPoint
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
@@ -37,6 +42,7 @@ class SecurityConfiguration(
             it.requestMatchers("/token/refresh/**").permitAll()
             it.requestMatchers("/", "/error").permitAll()
             it.requestMatchers("/auth/**", "/oauth2/**").permitAll()
+            it.requestMatchers("/api/login").permitAll()
             it.anyRequest().authenticated()
         }
 
@@ -47,7 +53,6 @@ class SecurityConfiguration(
             }
             it.redirectionEndpoint { endpoint -> endpoint.baseUri(OAUTH2_REDIRECTION_ENDPOINT) }
             it.userInfoEndpoint { endpoint -> endpoint.userService(customOAuth2UserService) }
-            it.tokenEndpoint { endpoint -> endpoint.accessTokenResponseClient(RestClientAuthorizationCodeTokenResponseClient()) }
             it.successHandler(oAuth2AuthenticationSuccessHandler)
             it.failureHandler(oAuth2AuthenticationFailureHandler)
         }
@@ -60,4 +65,12 @@ class SecurityConfiguration(
 
         return http.build()
     }
+
+    @Bean
+    fun authenticationManager(authenticationConfiguration: AuthenticationConfiguration): AuthenticationManager =
+        authenticationConfiguration.authenticationManager
+
+    @Bean
+    fun passwordEncoder(): PasswordEncoder =
+        PasswordEncoderFactories.createDelegatingPasswordEncoder()
 }

@@ -3,20 +3,18 @@ package de.akvsoft.adohdo.security.oauth2
 import de.akvsoft.adohdo.security.CustomUserPrincipal
 import de.akvsoft.adohdo.user.User
 import de.akvsoft.adohdo.user.UserRepository
-import org.slf4j.LoggerFactory
+import io.github.oshai.kotlinlogging.KotlinLogging
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest
 import org.springframework.security.oauth2.core.user.OAuth2User
 import org.springframework.stereotype.Service
 
+private val logger = KotlinLogging.logger {  }
+
 @Service
 class CustomOAuth2UserService(
     private val userRepository: UserRepository
 ) : DefaultOAuth2UserService() {
-
-    companion object {
-        val logger = LoggerFactory.getLogger(CustomOAuth2UserService::class.java)!!
-    }
 
     override fun loadUser(request: OAuth2UserRequest): OAuth2User {
         val user = super.loadUser(request)
@@ -30,7 +28,7 @@ class CustomOAuth2UserService(
         )
 
         if (userInfo.email.isEmpty()) {
-            logger.error("Email not found from OAuth2 provider")
+            logger.error { "Email not found from OAuth2 provider" }
             throw IllegalStateException("Email not found from OAuth2 provider") // TODO
         }
 

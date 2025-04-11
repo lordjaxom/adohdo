@@ -1,31 +1,37 @@
-<nav class="navbar navbar-expand-lg bg-body-tertiary">
-    <div class="container-fluid">
-        <a class="navbar-brand">a:do:h:do</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
-                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav me-auto">
-                <li class="nav-item">
-                    <a class="nav-link" ariaCurrentWhenActive="page" routerLink="/dashboard" routerLinkActive="active">Dashboard</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" ariaCurrentWhenActive="page" routerLink="/tasks" routerLinkActive="active">Tasks</a>
-                </li>
-            </ul>
-            <ul class="navbar-nav">
-                <li class="nav-item dropdown d-flex">
-                    <a class="nav-link" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        {{ user.name }}
-                    </a>
-                    <ul class="dropdown-menu dropdown-menu-end">
-                        <li><a class="dropdown-item" href="#">Profile</a></li>
-                        <li><hr class="dropdown-divider"></li>
-                        <li><a class="dropdown-item" href="#" (click)="logout()">Log out</a></li>
+<div class="container">
+    <div class="card border-0 shadow rounded-3 my-3 bg-body-tertiary">
+        <div class="card-body py-0">
+            <nav class="navbar navbar-expand-lg">
+                <a class="navbar-brand">a:do:h:do</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+                        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav me-auto">
+                        <li class="nav-item">
+                            <a class="nav-link" ariaCurrentWhenActive="page" routerLink="/dashboard" routerLinkActive="active">Dashboard</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" ariaCurrentWhenActive="page" routerLink="/tasks" routerLinkActive="active">Tasks</a>
+                        </li>
                     </ul>
-                </li>
-            </ul>
+                    <ul class="navbar-nav">
+                        <li class="nav-item dropdown d-flex">
+                            <a class="nav-link" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                {{ user?.name }}
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end">
+                                <li><a class="dropdown-item" href="#">Profile</a></li>
+                                <li>
+                                    <hr class="dropdown-divider">
+                                </li>
+                                <li><a class="dropdown-item" href="#" (click)="logout()">Log out</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
         </div>
     </div>
-</nav>
+</div>
