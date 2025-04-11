@@ -13,6 +13,9 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.http.SessionCreationPolicy
 import org.springframework.security.crypto.factory.PasswordEncoderFactories
 import org.springframework.security.crypto.password.PasswordEncoder
+import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository
+import org.springframework.security.oauth2.client.web.DefaultOAuth2AuthorizationRequestResolver
+import org.springframework.security.oauth2.client.web.OAuth2AuthorizationRequestCustomizers
 import org.springframework.security.web.SecurityFilterChain
 import org.springframework.security.web.authentication.HttpStatusEntryPoint
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
@@ -27,6 +30,7 @@ class SecurityConfiguration(
     private val oAuth2AuthenticationFailureHandler: OAuth2AuthenticationFailureHandler,
     private val oauth2AuthorizationRequestRepository: HttpCookieOAuth2AuthorizationRequestRepository,
     private val tokenAuthenticationFilter: TokenAuthenticationFilter,
+    private val clientRegistrationRepository: ClientRegistrationRepository
 ) {
 
     @Bean
@@ -50,6 +54,7 @@ class SecurityConfiguration(
             it.authorizationEndpoint { endpoint ->
                 endpoint.baseUri(OAUTH2_BASE_URI)
                 endpoint.authorizationRequestRepository(oauth2AuthorizationRequestRepository)
+                endpoint.authorizationRequestResolver(oauth2AuthorizationRequestResolver())
             }
             it.redirectionEndpoint { endpoint -> endpoint.baseUri(OAUTH2_REDIRECTION_ENDPOINT) }
             it.userInfoEndpoint { endpoint -> endpoint.userService(customOAuth2UserService) }
@@ -65,6 +70,11 @@ class SecurityConfiguration(
 
         return http.build()
     }
+
+    @Bean
+    fun oauth2AuthorizationRequestResolver(): DefaultOAuth2AuthorizationRequestResolver =
+        DefaultOAuth2AuthorizationRequestResolver(clientRegistrationRepository, OAUTH2_BASE_URI)
+            .apply { setAuthorizationRequestCustomizer(OAuth2AuthorizationRequestCustomizers.withPkce()) }
 
     @Bean
     fun authenticationManager(authenticationConfiguration: AuthenticationConfiguration): AuthenticationManager =
