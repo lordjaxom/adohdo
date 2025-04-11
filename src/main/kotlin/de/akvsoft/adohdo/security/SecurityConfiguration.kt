@@ -46,7 +46,7 @@ class SecurityConfiguration(
             it.requestMatchers("/token/refresh/**").permitAll()
             it.requestMatchers("/", "/error").permitAll()
             it.requestMatchers("/auth/**", "/oauth2/**").permitAll()
-            it.requestMatchers("/api/login").permitAll()
+            it.requestMatchers("/api/login", "/api/register").permitAll()
             it.anyRequest().authenticated()
         }
 

@@ -12,10 +12,22 @@
                         <div class="mb-3">
                             <label for="email" class="text-primary small pb-1">Email address</label>
                             <input type="email" class="form-control" id="email" placeholder="name@example.com" formControlName="email">
+                            <div role="alert" class="text-danger small pt-1"
+                                 *ngIf="loginForm.controls['email'].touched && loginForm.controls['email'].hasError('required')">
+                                The email address is required.
+                            </div>
+                            <div role="alert" class="text-danger small pt-1"
+                                 *ngIf="loginForm.controls['email'].touched && loginForm.controls['email'].hasError('email')">
+                                Please enter a valid email address.
+                            </div>
                         </div>
                         <div class="mb-4">
                             <label for="password" class="text-primary small pb-1">Password</label>
                             <input type="password" class="form-control" id="password" placeholder="Password" formControlName="password">
+                            <div role="alert" class="text-danger small pt-1"
+                                 *ngIf="loginForm.controls['password'].touched && loginForm.controls['password'].hasError('required')">
+                                The pasword is required.
+                            </div>
                         </div>
 
                         <div class="alert alert-danger" role="alert" *ngIf="error">
@@ -24,7 +36,8 @@
 
                         <div class="d-grid">
                             <button class="btn btn-primary fw-bold" type="submit"
-                                    [disabled]="loginForm.invalid || loading" (click)="loginLocally()">Sign in</button>
+                                    [disabled]="loginForm.invalid || loading" (click)="loginLocally()">Sign in
+                            </button>
                         </div>
                     </form>
                 </div>
@@ -34,7 +47,9 @@
     <div class="row">
         <div class="col-sm-9 col-md-7 col-lg-5 mx-auto mt-2">
             <div class="w-50 float-start">Forgot password?</div>
-            <div class="w-50 float-start text-end">Register</div>
+            <div class="w-50 float-start text-end">
+                <a class="link-dark" routerLink="/register">Register</a>
+            </div>
         </div>
     </div>
     <div class="row">
@@ -52,12 +67,14 @@
                 <div class="card-body p-4 p-sm-5">
                     <div class="d-grid mb-2">
                         <button class="btn btn-google fw-bold" (click)="loginWithProvider(prGoogle)">
-                            <fa-icon [icon]="faGoogle"/> Sign in with Google
+                            <fa-icon [icon]="faGoogle"/>
+                            Sign in with Google
                         </button>
                     </div>
                     <div class="d-grid">
                         <button class="btn btn-github fw-bold" (click)="loginWithProvider(prGithub)">
-                            <fa-icon [icon]="faGithub"/> Sign in with Github
+                            <fa-icon [icon]="faGithub"/>
+                            Sign in with Github
                         </button>
                     </div>
                 </div>

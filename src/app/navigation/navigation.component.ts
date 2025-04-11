@@ -11,7 +11,7 @@ import {AuthenticationService} from "../security/authentication.service";
 })
 export class NavigationComponent implements OnInit {
 
-    user_!: User;
+    user?: User;
 
     constructor(
         private userService: UserService,
@@ -20,11 +20,7 @@ export class NavigationComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.userService.user.subscribe(user => this.user_ = user);
-    }
-
-    get user() {
-        return this.user_;
+        this.userService.user.subscribe(user => this.user = user);
     }
 
     logout() {

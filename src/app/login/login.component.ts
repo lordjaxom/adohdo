@@ -1,17 +1,17 @@
+import {NgIf} from "@angular/common";
 import {Component, OnInit} from "@angular/core";
 import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from "@angular/forms";
-import {Router} from "@angular/router";
+import {Router, RouterLink} from "@angular/router";
 import {FontAwesomeModule} from "@fortawesome/angular-fontawesome";
 import {faGithub, faGoogle} from "@fortawesome/free-brands-svg-icons";
 
 import {AuthenticationProvider} from "../model/model";
 import {LoginService} from "./login.service";
 import {AuthenticationService} from "../security/authentication.service";
-import {NgIf} from "@angular/common";
 
 @Component({
     selector: 'app-login',
-    imports: [FontAwesomeModule, ReactiveFormsModule, NgIf],
+    imports: [FontAwesomeModule, ReactiveFormsModule, NgIf, RouterLink],
     templateUrl: './login.component.html',
     styleUrl: './login.component.scss'
 })
@@ -36,16 +36,21 @@ export class LoginComponent implements OnInit {
     ) {
     }
 
-    ngOnInit(): void {
+    ngOnInit() {
         this.loginForm = this.formBuilder.group({
-            email: ['', Validators.required],
-            password: ['', Validators.required],
-        })
+            email: ['', [Validators.required, Validators.email]],
+            password: ['', [Validators.required]],
+        });
     }
 
     loginLocally() {
         this.error = false;
         this.submitted = false;
+
+        if (!this.loginForm.valid) {
+            return;
+        }
+
         this.loading = true;
 
         console.info("Logging in locally")
