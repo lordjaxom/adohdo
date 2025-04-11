@@ -4,7 +4,12 @@ import jakarta.persistence.*
 import java.util.*
 
 @Entity
-@Table(name = "users")
+@Table(
+    name = "users",
+    indexes = [
+        Index(name = "idx_user_email", columnList = "email", unique = true),
+    ]
+)
 class User(
     @Column(nullable = false, unique = true)
     var email: String,
