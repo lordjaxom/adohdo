@@ -1,38 +1,72 @@
 package de.akvsoft.adohdo.event
 
+import de.akvsoft.adohdo.user.UserResponse
 import io.github.oshai.kotlinlogging.KotlinLogging
+import org.springframework.context.event.ContextClosedEvent
+import org.springframework.context.event.EventListener
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter
+import java.util.*
+import java.util.concurrent.locks.ReentrantReadWriteLock
+import kotlin.concurrent.read
+import kotlin.concurrent.write
 
 private val logger = KotlinLogging.logger {}
 
 @Service
-class EventService {
+class EventService(
+    private val asyncEventService: AsyncEventService
+) {
 
-    private val emitters = mutableListOf<SseEmitter>()
+    private val emitters = mutableMapOf<UUID, MutableSet<SseEmitter>>()
+    private val lock = ReentrantReadWriteLock()
 
-    fun register(): SseEmitter {
-        synchronized(this) {
-            return SseEmitter()
-                .also { emitters.add(it) }
+    fun subscribe(uuid: UUID): SseEmitter =
+        lock.write {
+            return SseEmitter().also {
+                emitters
+                    .computeIfAbsent(uuid) { mutableSetOf() }
+                    .add(it)
+            }
+        }
+
+    fun emit(event: Any) {
+        lock.read {
+            emitters.entries
+                .asSequence()
+                .flatMap { it.value.asSequence().map { emitter -> Pair(it.key, emitter) } }
+                .forEach { (key, emitter) -> asyncEventService.send(event, key, emitter) }
+        }
+    }
+
+    internal fun unsubcribe(key: UUID, emitter: SseEmitter) {
+        lock.write {
+            emitters[key]
+                ?.apply { remove(emitter) }
+                ?.apply {
+                    if (isEmpty()) {
+                        emitters.remove(key)
+                    }
+                }
         }
     }
 
     @Scheduled(fixedDelay = 1000)
     fun emit() {
-        synchronized(this) {
-            logger.info { "Sending events to ${emitters.size} emitters." }
-            emitters.removeIf {
-                try {
-                    it.send("Hallo Welt")
-                    false
-                } catch (e: Exception) {
-                    it.completeWithError(e)
-                    true
-                }
-            }
+        emit(UserResponse("Hi, my name is"))
+    }
+
+    @EventListener(ContextClosedEvent::class)
+    fun onContextStopped(event: ContextClosedEvent) {
+        logger.info { "Closing all active event streams due to application shutdown" }
+
+        lock.write {
+            emitters.values
+                .asSequence()
+                .flatMap { it.asSequence() }
+                .forEach { it.complete() }
+            emitters.clear()
         }
     }
 }
-

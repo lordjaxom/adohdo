@@ -16,6 +16,8 @@ class TokenAuthenticationFilter(
     private val userDetailsService: CustomUserDetailsService
 ) : OncePerRequestFilter() {
 
+    override fun shouldNotFilterAsyncDispatch() = false
+
     override fun doFilterInternal(request: HttpServletRequest, response: HttpServletResponse, filterChain: FilterChain) {
         try {
             val jwt = extractBearerToken(request)

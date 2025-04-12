@@ -12,8 +12,6 @@ import {SseClient} from "ngx-sse-client";
 })
 export class DashboardComponent implements OnInit {
 
-    private observable?: Observable<unknown>;
-
     constructor(
         private authenticationService: AuthenticationService,
         private toastrService: ToastrService,
@@ -26,6 +24,9 @@ export class DashboardComponent implements OnInit {
         this.sseClient
             .stream("/api/events", {}, {headers})
             .subscribe(event => {
+                console.info("Received event", event);
+                if (event instanceof ErrorEvent) {
+                }
                 const message = event as MessageEvent
                 this.toastrService.info(message.data)
             })

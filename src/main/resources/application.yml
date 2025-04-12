@@ -28,6 +28,10 @@ spring:
             scope:
               - user:email
               - read:user
+  task:
+    scheduling:
+      pool:
+        size: 16
 
 adohdo:
   auth:
