@@ -15,6 +15,6 @@ class EventController(
 
     @GetMapping
     fun events(@AuthenticationPrincipal principal: CustomUserPrincipal): SseEmitter {
-        return eventService.subscribe(principal.id).also { eventService.emit("New subscriber!") }
+        return eventService.subscribe(principal.id)
     }
 }

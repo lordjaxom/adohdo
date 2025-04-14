@@ -5,6 +5,9 @@ spring:
     url: jdbc:h2:file:./var/adohdo.h2
     username: sa
     password: ""
+  h2:
+    console:
+      enabled: false
   jpa:
     show-sql: true
   mvc:

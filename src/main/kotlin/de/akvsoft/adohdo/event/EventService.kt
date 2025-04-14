@@ -1,13 +1,11 @@
 package de.akvsoft.adohdo.event
 
-import de.akvsoft.adohdo.user.UserResponse
 import io.github.oshai.kotlinlogging.KotlinLogging
 import org.springframework.context.event.ContextClosedEvent
 import org.springframework.context.event.EventListener
-import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter
-import java.util.*
+import java.util.UUID
 import java.util.concurrent.locks.ReentrantReadWriteLock
 import kotlin.concurrent.read
 import kotlin.concurrent.write
@@ -50,11 +48,6 @@ class EventService(
                     }
                 }
         }
-    }
-
-    @Scheduled(fixedDelay = 1000)
-    fun emit() {
-        emit(UserResponse("Hi, my name is"))
     }
 
     @EventListener(ContextClosedEvent::class)
